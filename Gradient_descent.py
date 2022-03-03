@@ -166,7 +166,7 @@ def createplot(fx):
     steps = list(range(len(fx_line)))
     plt.style.use('ggplot')
     plt.figure(figsize = (20,8))
-    print(steps)
+    
     sns.lineplot(steps,fx_line)
     plt.xlabel(xlabel='Steps')
     plt.ylabel(ylabel='Cost')
@@ -187,47 +187,48 @@ def main():
         #print("Learning Rate:",lrate, file=outfile)
         
         print("Output is generated in file - Gradient_Descent_Output.txt")
-        with open("Gradient_Descent_Output.txt",'a+') as outfile:
+        with open("Gradient_Descent_Output.txt",'w') as outfile:
         
-            print("\n Matrix Created with {} rows and {} columns".format(n1n2,n3n4),file=outfile)
-            print("\n", numpy.matrix(matrix),file=outfile)
+            #print("\n Matrix Created with "+n1n2+" rows and "" columns")
+            print("\n Matrix Created with {} rows and {} columns".format(n1n2,n3n4))
+            print("\n", numpy.matrix(matrix))
             InfiteNorm = Cal_InfinteNorm(matrix)
-            print("\n Infinite Norm of matrix = ",InfiteNorm,file=outfile)
+            print("\n Infinite Norm of matrix = ",InfiteNorm)
             b = CreateMatrix(n1n2,1)
-            print("\n Generated b matrix of size {} * 1".format(n1n2),file=outfile)
-            print("\n",numpy.matrix(b),file=outfile)
+            print("\n Generated b matrix of size {} * 1".format(n1n2))
+            print("\n",numpy.matrix(b))
             previous_x = CreateMatrix(row=n3n4, col=1)
             current_x = CreateMatrix(row=n3n4, col=1)
             i=1
             GTranspose = mat_transpose(matrix)
-            print("\n L2 norm of ||x(0) - x(-1)|| = ", Cal_L2norm(mat_sub(current_x,previous_x),n3n4,1),file=outfile)
+            print("\n L2 norm of ||x(0) - x(-1)|| = ", Cal_L2norm(mat_sub(current_x,previous_x),n3n4,1))
             x_list.append(current_x)
-            fx = fx_calculation(matrix,current_x,b)
-            fx_list.append(fx)
-            g = mat_sub(mat_mul(mat_mul(GTranspose,matrix),current_x),mat_mul(GTranspose,b))
-                
-            lrate = learning_rate(g,GTranspose,matrix)
-        
+            
+            
             while(Cal_L2norm(mat_sub(previous_x,current_x),n3n4,1)>pow(10,-4)):
                 #print(current_x)
             
-                        
+                g = mat_sub(mat_mul(mat_mul(GTranspose,matrix),current_x),mat_mul(GTranspose,b))
+                
+                lrate = learning_rate(g,GTranspose,matrix)
+               
                 previous_x = copy.deepcopy(current_x)
                 
                 current_x = gradient_descent(current_x, lrate, g, GTranspose, matrix, b)
-                print("\n Iteration {} and x({}) : \n {} ".format(i,i,numpy.matrix(current_x)),file=outfile )
+                
+                print("\n Iteration {} and x({}) : \n {} ".format(i,i,numpy.matrix(current_x)))
                 
                 fx = fx_calculation(matrix,current_x,b)
-                print("\n f(x) value for generated x: ",fx, file=outfile)
+                print("\n f(x) value for generated x: ",fx)
                 
                 x_list.append(current_x)
                 fx_list.append(round(fx,4))
                 
-                print("\n L2 norm of ||x({}) - x({}-1)|| = {} ".format(i,i,Cal_L2norm(mat_sub(current_x,previous_x),n3n4,1)),file=outfile)
+                print("\n L2 norm of ||x({}) - x({}-1)|| = {} ".format(i,i,Cal_L2norm(mat_sub(current_x,previous_x),n3n4,1)))
                 #print("\n L2 norm of ||x({}) - x({}-1)|| = {} ".format(i,i,Cal_L2norm(mat_sub(current_x,previous_x),n3n4,1)))
                 
                 i+=1
-        print(fx_list)        
+               
         createplot(fx_list)
     else:
         print("\n Number is not four digit!!!")
